@@ -185,25 +185,29 @@ export default function Hero() {
             </div>
 
             <div className="flex flex-wrap gap-6 items-center">
-              <motion.button
+              <motion.a
+                href="#contact-me"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-black text-white px-10 py-5 rounded-full font-bold text-sm tracking-tight shadow-xl shadow-black/20"
+                className="bg-black text-white px-10 py-5 rounded-full font-bold text-sm tracking-tight shadow-xl shadow-black/20 inline-block"
               >
                 Let's Talk
-              </motion.button>
+              </motion.a>
 
-              <motion.button
+              <motion.a
+                href="/resume.pdf"
+                target="_blank"
+                download
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 font-bold text-sm group"
+                className="flex items-center gap-2 font-bold text-sm group cursor-pointer"
               >
                 Download Cv
                 <div className="relative overflow-hidden">
                   <Download size={18} className="group-hover:translate-y-6 transition-transform duration-300" />
                   <Download size={18} className="absolute -top-6 left-0 group-hover:translate-y-6 transition-transform duration-300" />
                 </div>
-              </motion.button>
+              </motion.a>
             </div>
 
             {/* Social Links Bar */}
