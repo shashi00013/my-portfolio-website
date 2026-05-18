@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Link, Navigate } from "react-router-dom";
+import profileImg from "../assets/images/shashi_profile.jpg";
 
 type PanelTab = "messages" | "users" | "activity";
 
@@ -326,7 +327,7 @@ export default function AdminPanel() {
                                  <div className="flex items-center gap-4">
                                     <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center overflow-hidden border border-zinc-100 shadow-sm">
                                        <img 
-                                         src={(u.email === "sk5251476@gmail.com" || u.email === "joker5251476@gmail.com") ? "/src/assets/images/new_original_shashi_photo_1779121742145.png" : `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.uid}`} 
+                                         src={(u.email === "sk5251476@gmail.com" || u.email === "joker5251476@gmail.com") ? profileImg : `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.uid}`} 
                                          alt="AV" 
                                          className="w-full h-full object-cover"
                                        />

@@ -4,6 +4,7 @@ import { useAuth } from "../hooks/useAuth";
 import { LogOut, User as UserIcon, MessageSquare, Shield, Activity, BarChart3, Settings, X, Save } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import profileImg from "../assets/images/shashi_profile.jpg";
 
 export default function Dashboard() {
   const { user, userData, logout, isAdmin, updateProfileName } = useAuth();
@@ -70,7 +71,7 @@ export default function Dashboard() {
              </div>
              <div className="w-12 h-12 rounded-2xl bg-zinc-200 overflow-hidden border-2 border-white shadow-sm">
                 <img 
-                  src={(user?.email === "sk5251476@gmail.com" || user?.email === "joker5251476@gmail.com") ? "/src/assets/images/new_original_shashi_photo_1779121742145.png" : `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.uid}`} 
+                  src={(user?.email === "sk5251476@gmail.com" || user?.email === "joker5251476@gmail.com") ? profileImg : `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.uid}`} 
                   alt="Avatar" 
                   className="w-full h-full object-cover"
                 />

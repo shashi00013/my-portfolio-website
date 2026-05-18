@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowRight, Download, Mail, Github, Linkedin, Sparkles } from "lucide-react";
 import { useRef, useState, useMemo, useEffect } from "react";
+import profileImg from "../assets/images/shashi_profile.jpg";
 
 function SequentialTypewriter() {
   const lines = useMemo(() => [
@@ -244,7 +245,7 @@ export default function Hero() {
             </div>
 
             <img
-              src="/src/assets/images/shashi_profile.jpg"
+              src={profileImg}
               alt="Shashi Kumar"
               className="absolute inset-0 w-full h-full object-cover rounded-[3rem] drop-shadow-2xl"
               referrerPolicy="no-referrer"
