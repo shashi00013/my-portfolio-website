@@ -142,32 +142,32 @@ export default function Dashboard() {
         </div>
 
         {/* Support Section */}
-        <div className="mt-12 bg-gradient-to-r from-zinc-900 to-zinc-950 p-12 rounded-[3rem] text-white flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden">
+        <div className="mt-12 bg-gradient-to-r from-indigo-50 to-white border border-indigo-100 p-12 rounded-[3rem] text-zinc-900 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden shadow-sm">
            <div className="relative z-10">
               <div className="flex items-center gap-3 mb-4">
                  <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
-                 <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Live Services</span>
+                 <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Live Services</span>
               </div>
               <h3 className="text-4xl font-bold tracking-tighter mb-4 italic uppercase">Need help with<br />anything?</h3>
-              <p className="text-zinc-400 max-w-sm mb-8 font-medium">Our support team is available to help you with any issues or feedback you have about the "Ship".</p>
-              <Link to="/messages" className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-bold text-xs uppercase tracking-widest hover:bg-zinc-200 transition-colors">
+              <p className="text-zinc-500 max-w-sm mb-8 font-medium">Our support team is available to help you with any issues or feedback you have about the "Ship".</p>
+              <Link to="/messages" className="inline-flex items-center gap-3 px-8 py-4 bg-indigo-600 text-white rounded-full font-bold text-xs uppercase tracking-widest hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200">
                  Talk to us <MessageSquare size={14} />
               </Link>
            </div>
            
            <div className="relative z-10 grid grid-cols-2 gap-4">
-              <div className="p-6 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-sm">
-                 <p className="text-2xl font-black mb-1">24/7</p>
-                 <p className="text-[8px] font-bold uppercase tracking-widest text-zinc-500">Support Availability</p>
+              <div className="p-6 bg-white rounded-3xl border border-indigo-50 shadow-sm">
+                 <p className="text-2xl font-black mb-1 text-indigo-950">24/7</p>
+                 <p className="text-[8px] font-bold uppercase tracking-widest text-zinc-400">Support Availability</p>
               </div>
-              <div className="p-6 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-sm">
-                 <p className="text-2xl font-black mb-1">100%</p>
-                 <p className="text-[8px] font-bold uppercase tracking-widest text-zinc-500">Secure Protocol</p>
+              <div className="p-6 bg-white rounded-3xl border border-indigo-50 shadow-sm">
+                 <p className="text-2xl font-black mb-1 text-indigo-950">100%</p>
+                 <p className="text-[8px] font-bold uppercase tracking-widest text-zinc-400">Secure Protocol</p>
               </div>
            </div>
 
            {/* Decorative BG element */}
-           <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
+           <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
         </div>
 
         {/* Edit Profile Modal */}
