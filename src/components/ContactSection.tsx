@@ -102,7 +102,7 @@ export function Contact() {
             </svg>
           </div>
 
-          <p className="text-zinc-500 font-medium">Have a nice works? reach out and let's chat.</p>
+          <p className="text-zinc-500 font-medium">Have a project in mind? Reach out and let's chat.</p>
         </div>
 
         <div className="max-w-4xl mx-auto">
@@ -126,7 +126,7 @@ export function Contact() {
                   required
                   value={formData.email}
                   onChange={e => setFormData({...formData, email: e.target.value})}
-                  placeholder="Where can i reply"
+                  placeholder="Where can I reply?"
                   className="w-full bg-transparent border-b border-zinc-200 py-4 focus:border-zinc-950 outline-none transition-all placeholder:text-zinc-300 font-medium text-lg"
                 />
               </div>
@@ -176,7 +176,7 @@ export function Contact() {
                    </svg>
                 </div>
               </div>
-              <p className="text-[10px] font-bold text-zinc-400 tracking-widest uppercase">I'll must get back to you within 24 hours</p>
+              <p className="text-[10px] font-bold text-zinc-400 tracking-widest uppercase">I will get back to you within 24 hours</p>
             </div>
           </form>
         </div>

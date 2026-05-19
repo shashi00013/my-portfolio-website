@@ -44,7 +44,7 @@ export function Career() {
             EXPERIENCE
           </h2>
           <p className="text-zinc-500 max-w-lg">
-            There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.
+            My professional journey encompasses freelance development, community leadership, and impactful technical collaborations across India.
           </p>
         </div>
 

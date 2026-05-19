@@ -3,21 +3,21 @@ import { ArrowRight, Box, Camera, Palette, Shield, Terminal, Zap } from "lucide-
 
 const services = [
   {
-    title: "UI/UX CREATIVE DESIGN",
-    desc: "Crafting intuitive digital paths that users actually enjoy following.",
-    icon: <Palette size={32} />,
+    title: "FULL STACK DEVELOPMENT",
+    desc: "Building robust, scalable web applications from responsive frontends to secure database architectures.",
+    icon: <Terminal size={32} />,
     dark: true
   },
   {
-    title: "VISUAL GRAPHIC DESIGN",
-    desc: "Identity systems and brand languages built for modern visibility.",
-    icon: <Box size={32} />,
+    title: "AI ENGINEERING & INTEGRATION",
+    desc: "Implementing intelligent features, LLMs, and smart automation to modernize digital workflows.",
+    icon: <Zap size={32} />,
     dark: false
   },
   {
-    title: "STRATEGY & DIGITAL MARKETING",
-    desc: "Data-driven growth methods to put your product in front of the right eyes.",
-    icon: <Zap size={32} />,
+    title: "UI/UX CREATIVE DESIGN",
+    desc: "Crafting intuitive digital paths that users actually enjoy following.",
+    icon: <Palette size={32} />,
     dark: false
   }
 ];
@@ -35,14 +35,14 @@ export default function Services() {
           </div>
           <div className="flex flex-col items-start lg:items-end gap-8">
             <p className="text-zinc-500 max-w-sm lg:text-right">
-              There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.
+              I deliver comprehensive digital solutions that combine aesthetic excellence with robust technical architecture to help brands stand out.
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="bg-black text-white px-8 py-4 rounded-full font-bold text-xs tracking-widest uppercase"
             >
-              All Service
+              All Services
             </motion.button>
           </div>
         </div>

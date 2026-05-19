@@ -3,23 +3,23 @@ import { ArrowRight, ExternalLink } from "lucide-react";
 
 const caseStudies = [
   {
-    title: "Web Design for fintech payment solutions.",
-    category: "WEB DESIGN",
-    description: "For now, a visual Designer trying to launch and focus on making digital experiences that really work for people. Any project, at any level list do it.",
+    title: "High-Performance Next.js E-Commerce Platform.",
+    category: "FULL STACK",
+    description: "Built a fully functional e-commerce platform using Next.js 14, integrating Stripe for payments, Tailwind CSS for styling, and Firebase for real-time order tracking and auth.",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
     linkText: "See Details"
   },
   {
-    title: "Minimal Agency website for startups business.",
-    category: "WEB DESIGN",
-    description: "How to run a successful business with your partner (and stay together). Making your studio is a beautiful adventure but also a big disaster if you don't do it right.",
+    title: "AI-Powered Customer Support SaaS.",
+    category: "AI & WEB",
+    description: "Developed an intelligent chatbot dashboard leveraging the Gemini API and React. Real-time context-aware responses reduced support tickets by 40%.",
     image: "https://images.unsplash.com/photo-1551135049-8a33b5883817?q=80&w=2070&auto=format&fit=crop",
     linkText: "See Details"
   },
   {
-    title: "Saas web and app design project.",
-    category: "WEB DESIGN",
-    description: "A data enablement platform powered by identity, centered on privacy, integrated everywhere.",
+    title: "Real-Time Collaborative Code Editor.",
+    category: "WEB APP",
+    description: "Engineered a collaborative code editor using WebSockets and React. Multiple users can edit the same file simultaneously with syntax highlighting and live preview.",
     image: "/src/assets/images/new_original_shashi_photo_1779121742145.png",
     linkText: "See Details"
   }
@@ -37,7 +37,7 @@ export function Projects() {
             CASE STUDY
           </h2>
           <p className="text-zinc-500 max-w-lg mb-20">
-            There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.
+            I've collaborated on and built various impactful projects from scalable full-stack applications to intuitive interfaces. Here are some case studies detailing the architecture and design logic behind my work.
           </p>
         </div>
 
