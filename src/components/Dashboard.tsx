@@ -71,7 +71,7 @@ export default function Dashboard() {
              </div>
              <div className="w-12 h-12 rounded-2xl bg-zinc-200 overflow-hidden border-2 border-white shadow-sm">
                 <img 
-                  src={(user?.email === "sk5251476@gmail.com" || user?.email === "joker5251476@gmail.com") ? profileImg : `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.uid}`} 
+                  src={isAdmin ? profileImg : `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.uid}`} 
                   alt="Avatar" 
                   className="w-full h-full object-cover"
                 />
@@ -149,7 +149,7 @@ export default function Dashboard() {
                  <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Live Services</span>
               </div>
               <h3 className="text-4xl font-bold tracking-tighter mb-4 italic uppercase">Need help with<br />anything?</h3>
-              <p className="text-zinc-500 max-w-sm mb-8 font-medium">Our support team is available to help you with any issues or feedback you have about the "Ship".</p>
+              <p className="text-zinc-500 max-w-sm mb-8 font-medium">I'm available to discuss project requirements, architecture consulting, or freelance opportunities.</p>
               <Link to="/messages" className="inline-flex items-center gap-3 px-8 py-4 bg-indigo-600 text-white rounded-full font-bold text-xs uppercase tracking-widest hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200">
                  Talk to us <MessageSquare size={14} />
               </Link>
@@ -157,8 +157,8 @@ export default function Dashboard() {
            
            <div className="relative z-10 grid grid-cols-2 gap-4">
               <div className="p-6 bg-white rounded-3xl border border-indigo-50 shadow-sm">
-                 <p className="text-2xl font-black mb-1 text-indigo-950">24/7</p>
-                 <p className="text-[8px] font-bold uppercase tracking-widest text-zinc-400">Support Availability</p>
+                 <p className="text-2xl font-black mb-1 text-indigo-950">48h</p>
+                 <p className="text-[8px] font-bold uppercase tracking-widest text-zinc-400">Average Response</p>
               </div>
               <div className="p-6 bg-white rounded-3xl border border-indigo-50 shadow-sm">
                  <p className="text-2xl font-black mb-1 text-indigo-950">100%</p>

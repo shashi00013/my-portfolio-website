@@ -429,7 +429,7 @@ export default function AdminPanel() {
                                  <div className="flex items-center gap-4">
                                     <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center overflow-hidden border border-zinc-100 shadow-sm">
                                        <img 
-                                         src={(u.email === "sk5251476@gmail.com" || u.email === "joker5251476@gmail.com") ? profileImg : `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.uid}`} 
+                                         src={(u.role === "admin") ? profileImg : `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.uid}`} 
                                          alt="AV" 
                                          className="w-full h-full object-cover"
                                        />
