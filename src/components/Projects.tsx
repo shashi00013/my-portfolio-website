@@ -8,7 +8,8 @@ const caseStudies = [
     description: "Built a fully functional e-commerce platform using Next.js 14, integrating Stripe for payments, Tailwind CSS for styling, and Firebase for real-time order tracking and auth.",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
     linkText: "View on GitHub",
-    url: "https://github.com/shashi00013"
+    url: "https://github.com/shashi00013",
+    liveUrl: "https://vercel.com"
   },
   {
     title: "AI-Powered Customer Support SaaS.",
@@ -16,7 +17,8 @@ const caseStudies = [
     description: "Developed an intelligent chatbot dashboard leveraging the Gemini API and React. Real-time context-aware responses reduced support tickets by 40%.",
     image: "https://images.unsplash.com/photo-1551135049-8a33b5883817?q=80&w=2070&auto=format&fit=crop",
     linkText: "View on GitHub",
-    url: "https://github.com/shashi00013"
+    url: "https://github.com/shashi00013",
+    liveUrl: "https://vercel.com"
   },
   {
     title: "Real-Time Collaborative Code Editor.",
@@ -24,7 +26,8 @@ const caseStudies = [
     description: "Engineered a collaborative code editor using WebSockets and React. Multiple users can edit the same file simultaneously with syntax highlighting and live preview.",
     image: "/src/assets/images/new_original_shashi_photo_1779121742145.png",
     linkText: "View on GitHub",
-    url: "https://github.com/shashi00013"
+    url: "https://github.com/shashi00013",
+    liveUrl: "https://vercel.com"
   }
 ];
 
@@ -83,12 +86,24 @@ export function Projects() {
                   {study.description}
                 </p>
                 
-                <div className="flex flex-col items-start gap-1">
-                   <a href={study.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 font-bold group cursor-pointer text-black hover:text-indigo-600 transition-colors">
-                      {study.linkText}
-                      <ExternalLink size={18} className="group-hover:scale-110 transition-transform" />
-                   </a>
-                   <div className="w-24 h-px bg-zinc-300 group-hover:w-full transition-all duration-500" />
+                <div className="flex flex-wrap items-center gap-8">
+                   <div className="flex flex-col items-start gap-1">
+                      <a href={study.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 font-bold group cursor-pointer text-black hover:text-indigo-600 transition-colors">
+                         {study.linkText}
+                         <ExternalLink size={18} className="group-hover:scale-110 transition-transform" />
+                      </a>
+                      <div className="w-full h-px bg-zinc-300 group-hover:bg-indigo-600 transition-all duration-500" />
+                   </div>
+                   
+                   {study.liveUrl && (
+                     <div className="flex flex-col items-start gap-1">
+                        <a href={study.liveUrl} target="_blank" rel="noreferrer" className="flex items-center gap-2 font-bold group cursor-pointer text-indigo-600 hover:text-black transition-colors">
+                           Live App
+                           <ArrowRight size={18} className="group-hover:scale-110 group-hover:translate-x-1 transition-transform" />
+                        </a>
+                        <div className="w-full h-px bg-indigo-200 group-hover:bg-zinc-300 transition-all duration-500" />
+                     </div>
+                   )}
                 </div>
               </motion.div>
             </div>

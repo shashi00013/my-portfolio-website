@@ -186,7 +186,9 @@ export default function Hero() {
 
             <div className="flex flex-wrap gap-6 items-center">
               <motion.a
-                href="#contact-me"
+                href="https://calendly.com"
+                target="_blank"
+                rel="noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-black text-white px-10 py-5 rounded-full font-bold text-sm tracking-tight shadow-xl shadow-black/20 inline-block"
