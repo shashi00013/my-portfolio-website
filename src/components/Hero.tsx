@@ -206,6 +206,20 @@ export default function Hero() {
                   try {
                     const { logActivity } = await import("../services/activityService");
                     await logActivity("public", "Anonymous User", "Downloaded Resume");
+                    
+                    // Trigger Email Notification
+                    fetch("https://formsubmit.co/ajax/sk5251476@gmail.com", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                      },
+                      body: JSON.stringify({
+                        _subject: "🚀 PORTFOLIO ALERT: Someone Downloaded Your CV!",
+                        message: "A visitor on your portfolio just clicked the 'Download CV' button. Check your Analytics dashboard for more details.",
+                        timestamp: new Date().toLocaleString()
+                      })
+                    }).catch(() => {}); // silent fail if adblocker blocks it
                   } catch (e) {}
                 }}
                 className="flex items-center gap-2 font-bold text-sm group cursor-pointer"
