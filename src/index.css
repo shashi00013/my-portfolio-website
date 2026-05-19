@@ -127,3 +127,11 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Fix images and videos in dark mode invert */
+body.dark-theme img, 
+body.dark-theme video, 
+body.dark-theme iframe,
+body.dark-theme .mix-blend-difference {
+  filter: invert(1) hue-rotate(180deg);
+}
