@@ -5,6 +5,7 @@ import { Career } from "./Career";
 import { Projects } from "./Projects";
 import { Skills } from "./Skills";
 import { Testimonials } from "./Testimonials";
+import { Blogs } from "./Blogs";
 import { AIChatbot } from "./AIChatbot";
 import { Education, Contact, Footer } from "./ContactSection";
 import { useEffect } from "react";
@@ -30,6 +31,7 @@ export default function Home() {
       <Skills />
       <Career />
       <Projects />
+      <Blogs />
       <Testimonials />
       <Education />
       <Contact />
