@@ -43,8 +43,7 @@ export const subscribeToUserMessages = async (userId: string, callback: (message
 
   const q = query(
     collection(db, "messages"),
-    where("userId", "==", userId),
-    orderBy("createdAt", "desc")
+    where("userId", "==", userId)
   );
 
   return onSnapshot(q, (snapshot) => {
@@ -52,7 +51,17 @@ export const subscribeToUserMessages = async (userId: string, callback: (message
       id: doc.id,
       ...doc.data()
     })) as Message[];
+    
+    // Sort client-side to avoid needing a Firestore composite index for (userId, createdAt)
+    messages.sort((a, b) => {
+      const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
+      const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
+      return timeB - timeA;
+    });
+
     callback(messages);
+  }, (error) => {
+    console.error("Error fetching user messages:", error);
   });
 };
 
@@ -101,4 +110,60 @@ export const deleteMessage = async (messageId: string) => {
 
   const messageRef = doc(db, "messages", messageId);
   await deleteDoc(messageRef);
+};
+
+export interface Inquiry {
+  id?: string;
+  name: string;
+  email: string;
+  company: string;
+  interest: string;
+  status: "unread" | "read";
+  createdAt: any;
+}
+
+export const submitInquiry = async (name: string, email: string, company: string, interest: string) => {
+  const { db } = await getFirebase();
+  if (!db) throw new Error("Firebase not initialized");
+
+  await addDoc(collection(db, "inquiries"), {
+    name,
+    email,
+    company,
+    interest,
+    status: "unread",
+    createdAt: Timestamp.now()
+  });
+};
+
+export const subscribeToAllInquiries = async (callback: (inquiries: Inquiry[]) => void) => {
+  const { db } = await getFirebase();
+  if (!db) return () => {};
+
+  const q = query(
+    collection(db, "inquiries"),
+    orderBy("createdAt", "desc")
+  );
+
+  return onSnapshot(q, (snapshot) => {
+    const inquiries = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as Inquiry[];
+    callback(inquiries);
+  });
+};
+
+export const markInquiryAsRead = async (inquiryId: string) => {
+  const { db } = await getFirebase();
+  if (!db) return;
+  const ref = doc(db, "inquiries", inquiryId);
+  await updateDoc(ref, { status: "read" });
+};
+
+export const deleteInquiry = async (inquiryId: string) => {
+  const { db } = await getFirebase();
+  if (!db) return;
+  const ref = doc(db, "inquiries", inquiryId);
+  await deleteDoc(ref);
 };

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAuth } from "../hooks/useAuth";
-import { subscribeToAllMessages, replyToMessage, deleteMessage, updateMessage, Message } from "../services/messageService";
+import { subscribeToAllMessages, replyToMessage, deleteMessage, updateMessage, Message, subscribeToAllInquiries, deleteInquiry, markInquiryAsRead, Inquiry } from "../services/messageService";
 import { subscribeToAllUsers, UserProfile } from "../services/userService";
 import { subscribeToActivityLogs, ActivityLog } from "../services/activityService";
 import { 
@@ -20,19 +20,28 @@ import {
   Calendar,
   Mail,
   Edit2,
-  Check
+  Check,
+  Download
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Link, Navigate } from "react-router-dom";
 import profileImg from "../assets/images/shashi_profile.jpg";
 
-type PanelTab = "messages" | "users" | "activity";
+type PanelTab = "messages" | "inquiries" | "users" | "activity";
 
 export default function AdminPanel() {
   const { user, isAdmin, loading: authLoading } = useAuth();
+  
+  const quickReplies = [
+    "Thanks for reaching out! Let's schedule a call.",
+    "I'll review your project and get back to you.",
+    "Could you share more details?",
+    "Thanks, I'll take a look!"
+  ];
   const [messages, setMessages] = useState<Message[]>([]);
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [logs, setLogs] = useState<ActivityLog[]>([]);
+  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   
   const [searchTerm, setSearchTerm] = useState("");
   const [replyText, setReplyText] = useState<{ [key: string]: string }>({});
@@ -43,18 +52,35 @@ export default function AdminPanel() {
 
   useEffect(() => {
     if (isAdmin) {
+      let isMounted = true;
       let unsubMessages: () => void;
       let unsubUsers: () => void;
       let unsubLogs: () => void;
+      let unsubInquiries: () => void;
 
-      subscribeToAllMessages(setMessages).then(unsub => unsubMessages = unsub);
-      subscribeToAllUsers(setUsers).then(unsub => unsubUsers = unsub);
-      subscribeToActivityLogs(setLogs).then(unsub => unsubLogs = unsub);
+      subscribeToAllMessages(setMessages).then(unsub => {
+        if (!isMounted) unsub();
+        else unsubMessages = unsub;
+      });
+      subscribeToAllUsers(setUsers).then(unsub => {
+        if (!isMounted) unsub();
+        else unsubUsers = unsub;
+      });
+      subscribeToActivityLogs(setLogs).then(unsub => {
+        if (!isMounted) unsub();
+        else unsubLogs = unsub;
+      });
+      subscribeToAllInquiries(setInquiries).then(unsub => {
+        if (!isMounted) unsub();
+        else unsubInquiries = unsub;
+      });
 
       return () => {
+        isMounted = false;
         if (unsubMessages) unsubMessages();
         if (unsubUsers) unsubUsers();
         if (unsubLogs) unsubLogs();
+        if (unsubInquiries) unsubInquiries();
       };
     }
   }, [isAdmin]);
@@ -112,6 +138,7 @@ export default function AdminPanel() {
     totalMessages: messages.length,
     unreadMessages: messages.filter(m => m.status === 'unread').length,
     totalUsers: users.length,
+    resumeDownloads: logs.filter(log => log.action === "Downloaded Resume").length,
     activeUsers: users.length // Placeholder, could be based on logs
   };
 
@@ -122,7 +149,7 @@ export default function AdminPanel() {
           <ArrowLeft size={16} /> Dashboard
         </Link>
         <div className="flex bg-zinc-100 p-1 rounded-xl">
-           {(["messages", "users", "activity"] as PanelTab[]).map(tab => (
+           {(["messages", "inquiries", "users", "activity"] as PanelTab[]).map(tab => (
              <button
                key={tab}
                onClick={() => setActiveTab(tab)}
@@ -141,7 +168,7 @@ export default function AdminPanel() {
 
       <main className="max-w-7xl w-full mx-auto p-6 md:p-12 space-y-12">
         {/* Dashboard Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
            <div className="bg-white p-6 rounded-3xl border border-zinc-100 shadow-sm">
               <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-4">
                  <MessageSquare size={20} />
@@ -157,6 +184,13 @@ export default function AdminPanel() {
               <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Unread Queries</p>
            </div>
            <div className="bg-white p-6 rounded-3xl border border-zinc-100 shadow-sm">
+              <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
+                 <Mail size={20} />
+              </div>
+              <h4 className="text-2xl font-bold">{inquiries.length}</h4>
+              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Public Inquiries</p>
+           </div>
+           <div className="bg-white p-6 rounded-3xl border border-zinc-100 shadow-sm">
               <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-4">
                  <Users size={20} />
               </div>
@@ -169,6 +203,13 @@ export default function AdminPanel() {
               </div>
               <h4 className="text-2xl font-bold">{logs.length}</h4>
               <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">System Activities</p>
+           </div>
+           <div className="bg-white p-6 rounded-3xl border border-zinc-100 shadow-sm">
+              <div className="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-4">
+                 <Download size={20} />
+              </div>
+              <h4 className="text-2xl font-bold">{stats.resumeDownloads}</h4>
+              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">CV Downloads</p>
            </div>
         </div>
 
@@ -224,7 +265,7 @@ export default function AdminPanel() {
                               </div>
                               <div>
                                  <h5 className="font-bold">{msg.userName}</h5>
-                                 <p className="text-[10px] font-bold text-zinc-400 uppercase">{msg.createdAt?.toDate().toLocaleString()}</p>
+                                 <p className="text-[10px] font-bold text-zinc-400 uppercase">{msg.createdAt?.toDate ? msg.createdAt.toDate().toLocaleString() : new Date(msg.createdAt?.seconds ? msg.createdAt.seconds * 1000 : Date.now()).toLocaleString()}</p>
                               </div>
                            </div>
                            <div className="flex items-center gap-2">
@@ -284,6 +325,17 @@ export default function AdminPanel() {
                           </div>
                         ) : (
                           <div className="space-y-3">
+                             <div className="flex flex-wrap gap-2 mb-2">
+                               {quickReplies.map(reply => (
+                                 <button
+                                   key={reply}
+                                   onClick={() => setReplyText(prev => ({ ...prev, [msg.id!]: reply }))}
+                                   className="px-3 py-1 bg-zinc-100 hover:bg-zinc-200 text-[10px] font-bold text-zinc-600 rounded-full transition-colors text-left"
+                                 >
+                                    {reply}
+                                 </button>
+                               ))}
+                             </div>
                              <textarea 
                                placeholder="Type reply..."
                                value={replyText[msg.id!] || ""}
@@ -298,6 +350,56 @@ export default function AdminPanel() {
                              </button>
                           </div>
                         )}
+                     </div>
+                   ))}
+                </motion.div>
+              )}
+
+              {activeTab === "inquiries" && (
+                <motion.div 
+                  key="inquiries-list"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-4"
+                >
+                   {inquiries.length === 0 ? (
+                      <div className="text-center py-12 text-zinc-400">No public inquiries found.</div>
+                   ) : inquiries.filter(i => i.name.toLowerCase().includes(searchTerm.toLowerCase()) || i.company.toLowerCase().includes(searchTerm.toLowerCase())).map(inq => (
+                     <div key={inq.id} className={`bg-white p-6 rounded-[2rem] border ${inq.status === 'unread' ? 'border-indigo-500 shadow-lg shadow-indigo-500/10' : 'border-zinc-100'} flex flex-col md:flex-row md:items-start justify-between gap-6`}>
+                        <div>
+                           <div className="flex flex-wrap items-center gap-3 mb-3">
+                              <h4 className="font-bold text-lg">{inq.name}</h4>
+                              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 bg-zinc-100 px-3 py-1 rounded-full">{inq.company || 'No Company'}</span>
+                              <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest ${inq.status === 'unread' ? 'bg-indigo-100 text-indigo-700' : 'bg-green-100 text-green-700'}`}>{inq.status}</span>
+                           </div>
+                           <p className="text-sm font-medium text-zinc-500 mb-2 flex items-center gap-2"><Mail size={14} /> {inq.email}</p>
+                           <div className="inline-block px-4 py-2 bg-zinc-50 border border-zinc-100 rounded-xl mt-2">
+                              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mr-2">Interested In:</span>
+                              <span className="text-sm font-bold text-zinc-800">{inq.interest}</span>
+                           </div>
+                        </div>
+                        <div className="flex flex-col items-start md:items-end gap-4 shrink-0">
+                           <p className="text-[10px] font-bold text-zinc-400 uppercase">
+                              {inq.createdAt?.toDate ? inq.createdAt.toDate().toLocaleString() : new Date(inq.createdAt?.seconds ? inq.createdAt.seconds * 1000 : Date.now()).toLocaleString()}
+                           </p>
+                           <div className="flex gap-2">
+                              {inq.status === 'unread' && (
+                                <button 
+                                  onClick={() => markInquiryAsRead(inq.id!)}
+                                  className="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-colors flex items-center gap-2"
+                                >
+                                   <Check size={14} /> Mark Read
+                                </button>
+                              )}
+                              <button 
+                                onClick={async () => { if(window.confirm("Delete inquiry?")) await deleteInquiry(inq.id!); }}
+                                className="px-4 py-2 bg-red-50 text-red-600 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition-colors flex items-center gap-2"
+                              >
+                                 <Trash2 size={14} /> Delete
+                              </button>
+                           </div>
+                        </div>
                      </div>
                    ))}
                 </motion.div>
@@ -373,7 +475,7 @@ export default function AdminPanel() {
                                  <p className="text-[10px] font-bold text-indigo-600 uppercase">By {log.userName}</p>
                                  <span className="w-1 h-1 bg-zinc-200 rounded-full" />
                                  <p className="text-[10px] font-medium text-zinc-400 flex items-center gap-1">
-                                    <Clock size={10} /> {log.timestamp?.toDate().toLocaleString()}
+                                    <Clock size={10} /> {log.timestamp?.toDate ? log.timestamp.toDate().toLocaleString() : new Date(log.timestamp?.seconds ? log.timestamp.seconds * 1000 : Date.now()).toLocaleString()}
                                  </p>
                               </div>
                            </div>
@@ -381,7 +483,7 @@ export default function AdminPanel() {
                         <div className="text-right">
                            <div className="flex items-center gap-2 text-zinc-300">
                               <Calendar size={14} />
-                              <span className="text-[10px] font-bold uppercase tracking-widest">{log.timestamp?.toDate().toLocaleDateString()}</span>
+                              <span className="text-[10px] font-bold uppercase tracking-widest">{log.timestamp?.toDate ? log.timestamp.toDate().toLocaleDateString() : new Date(log.timestamp?.seconds ? log.timestamp.seconds * 1000 : Date.now()).toLocaleDateString()}</span>
                            </div>
                         </div>
                      </div>

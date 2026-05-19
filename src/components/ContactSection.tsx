@@ -62,17 +62,30 @@ export function Education() {
 }
 
 export function Contact() {
-  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [activeInterest, setActiveInterest] = useState("Website Design");
+  const [formData, setFormData] = useState({ name: "", email: "", company: "" });
 
   const interests = [
     "Mobile App", "Website Design", "Branding", "Webflow development", "App design", "Graphic design", "Wordpress"
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.name || !formData.email) return;
+    
     setStatus("sending");
-    setTimeout(() => setStatus("sent"), 2000);
+    try {
+      const { submitInquiry } = await import("../services/messageService");
+      await submitInquiry(formData.name, formData.email, formData.company, activeInterest);
+      setStatus("sent");
+      setFormData({ name: "", email: "", company: "" });
+      setTimeout(() => setStatus("idle"), 5000);
+    } catch (error) {
+      console.error(error);
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 3000);
+    }
   };
 
   return (
@@ -99,6 +112,9 @@ export function Contact() {
                 <label className="text-[10px] font-black uppercase tracking-widest text-zinc-950 flex items-center gap-1">Name <span className="text-zinc-400">*</span></label>
                 <input
                   type="text"
+                  required
+                  value={formData.name}
+                  onChange={e => setFormData({...formData, name: e.target.value})}
                   placeholder="Hello..."
                   className="w-full bg-transparent border-b border-zinc-200 py-4 focus:border-zinc-950 outline-none transition-all placeholder:text-zinc-300 font-medium text-lg"
                 />
@@ -107,6 +123,9 @@ export function Contact() {
                 <label className="text-[10px] font-black uppercase tracking-widest text-zinc-950 flex items-center gap-1">Email <span className="text-zinc-400">*</span></label>
                 <input
                   type="email"
+                  required
+                  value={formData.email}
+                  onChange={e => setFormData({...formData, email: e.target.value})}
                   placeholder="Where can i reply"
                   className="w-full bg-transparent border-b border-zinc-200 py-4 focus:border-zinc-950 outline-none transition-all placeholder:text-zinc-300 font-medium text-lg"
                 />
@@ -117,6 +136,8 @@ export function Contact() {
               <label className="text-[10px] font-black uppercase tracking-widest text-zinc-950">Company name</label>
               <input
                 type="text"
+                value={formData.company}
+                onChange={e => setFormData({...formData, company: e.target.value})}
                 placeholder="Your company or website?"
                 className="w-full bg-transparent border-b border-zinc-200 py-4 focus:border-zinc-950 outline-none transition-all placeholder:text-zinc-300 font-medium text-lg"
               />
@@ -143,10 +164,10 @@ export function Contact() {
                 <motion.button 
                    whileHover={{ scale: 1.05 }}
                    whileTap={{ scale: 0.95 }}
-                   className="bg-black text-white px-12 py-5 rounded-full font-bold text-sm tracking-tight flex items-center gap-3 shadow-xl"
-                   disabled={status !== "idle"}
+                   className={`px-12 py-5 rounded-full font-bold text-sm tracking-tight flex items-center gap-3 shadow-xl transition-colors ${status === "error" ? "bg-red-500 text-white" : status === "sent" ? "bg-green-500 text-white" : "bg-black text-white"}`}
+                   disabled={status === "sending"}
                 >
-                  {status === "idle" ? "Send Me" : status === "sending" ? "Sending..." : "Sent!"}
+                  {status === "idle" ? "Send Me" : status === "sending" ? "Sending..." : status === "error" ? "Failed!" : "Sent Successfully!"}
                   <Sparkles size={18} />
                 </motion.button>
                 <div className="absolute -top-4 -right-8 rotate-12">

@@ -200,6 +200,12 @@ export default function Hero() {
                 download
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={async () => {
+                  try {
+                    const { logActivity } = await import("../services/activityService");
+                    await logActivity("public", "Anonymous User", "Downloaded Resume");
+                  } catch (e) {}
+                }}
                 className="flex items-center gap-2 font-bold text-sm group cursor-pointer"
               >
                 Download Cv
