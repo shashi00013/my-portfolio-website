@@ -267,6 +267,25 @@ export default function Hero() {
                 </motion.a>
               ))}
             </div>
+
+            {/* Spotify Now Playing / Personality Embed */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="mt-12 hidden md:block w-full max-w-sm"
+            >
+              <iframe 
+                style={{ borderRadius: '12px' }} 
+                src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0" 
+                width="100%" 
+                height="80" 
+                frameBorder="0" 
+                allowFullScreen={false} 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                loading="lazy"
+              ></iframe>
+            </motion.div>
           </motion.div>
         </div>
 
