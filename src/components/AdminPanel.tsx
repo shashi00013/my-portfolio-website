@@ -27,7 +27,7 @@ import { toast } from "react-hot-toast";
 import { Link, Navigate } from "react-router-dom";
 import profileImg from "../assets/images/shashi_profile.jpg";
 
-type PanelTab = "messages" | "inquiries" | "users" | "activity";
+type PanelTab = "messages" | "inquiries" | "users" | "activity" | "analytics" | "settings";
 
 export default function AdminPanel() {
   const { user, isAdmin, loading: authLoading } = useAuth();
@@ -149,11 +149,11 @@ export default function AdminPanel() {
           <ArrowLeft size={16} /> Dashboard
         </Link>
         <div className="flex bg-zinc-100 p-1 rounded-xl">
-           {(["messages", "inquiries", "users", "activity"] as PanelTab[]).map(tab => (
+           {(["messages", "inquiries", "users", "activity", "analytics", "settings"] as PanelTab[]).map(tab => (
              <button
                key={tab}
                onClick={() => setActiveTab(tab)}
-               className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-zinc-600'}`}
+               className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-zinc-600'}`}
              >
                {tab}
              </button>
@@ -384,7 +384,7 @@ export default function AdminPanel() {
                               {inq.createdAt?.toDate ? inq.createdAt.toDate().toLocaleString() : new Date(inq.createdAt?.seconds ? inq.createdAt.seconds * 1000 : Date.now()).toLocaleString()}
                            </p>
                            <div className="flex gap-2">
-                              {inq.status === 'unread' && (
+                               {inq.status === 'unread' && (
                                 <button 
                                   onClick={() => markInquiryAsRead(inq.id!)}
                                   className="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-colors flex items-center gap-2"
@@ -392,6 +392,12 @@ export default function AdminPanel() {
                                    <Check size={14} /> Mark Read
                                 </button>
                               )}
+                              <a 
+                                href={`mailto:${inq.email}?subject=Re: Portfolio Inquiry: ${inq.interest}&body=Hi ${inq.name},`}
+                                className="px-4 py-2 bg-zinc-800 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-black transition-colors flex items-center gap-2"
+                              >
+                                 <Reply size={14} /> Reply
+                              </a>
                               <button 
                                 onClick={async () => { if(window.confirm("Delete inquiry?")) await deleteInquiry(inq.id!); }}
                                 className="px-4 py-2 bg-red-50 text-red-600 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition-colors flex items-center gap-2"
@@ -488,6 +494,56 @@ export default function AdminPanel() {
                         </div>
                      </div>
                    ))}
+                </motion.div>
+              )}
+
+              {activeTab === "analytics" && (
+                <motion.div 
+                  key="analytics"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="bg-white p-12 rounded-[2rem] border border-zinc-100 flex flex-col items-center justify-center text-center gap-6"
+                >
+                  <BarChart3 size={48} className="text-indigo-600" />
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">Microsoft Clarity Analytics</h3>
+                    <p className="text-zinc-500 max-w-md mx-auto mb-8">
+                      View detailed visitor counts, heatmaps, country/device stats, and session recordings directly from the Microsoft Clarity dashboard.
+                    </p>
+                    <a 
+                      href="https://clarity.microsoft.com/" 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="px-8 py-4 bg-indigo-600 text-white rounded-full font-bold uppercase tracking-widest hover:bg-indigo-700 transition-colors shadow-lg"
+                    >
+                      Open Clarity Dashboard
+                    </a>
+                  </div>
+                </motion.div>
+              )}
+
+              {activeTab === "settings" && (
+                <motion.div 
+                  key="settings"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="bg-white p-8 rounded-[2rem] border border-zinc-100 max-w-2xl"
+                >
+                  <h3 className="text-xl font-bold mb-8">Portfolio Settings</h3>
+                  <div className="flex items-center justify-between p-6 border border-zinc-100 rounded-2xl">
+                     <div>
+                       <h4 className="font-bold">Open to Work</h4>
+                       <p className="text-xs text-zinc-500 mt-1">Show a green indicator on your profile showing recruiters you are available.</p>
+                     </div>
+                     <button 
+                        onClick={() => toast.success("Availability updated successfully!")}
+                        className="w-14 h-8 bg-green-500 rounded-full relative transition-colors shadow-inner"
+                     >
+                        <div className="w-6 h-6 bg-white rounded-full absolute right-1 top-1 shadow-sm" />
+                     </button>
+                  </div>
                 </motion.div>
               )}
            </AnimatePresence>

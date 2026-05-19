@@ -142,11 +142,21 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="flex items-center gap-3 mb-6">
-              <span className="text-3xl">👋</span>
-              <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
-                Hello! I'm <span className="text-zinc-950">Shashi</span>
-              </h2>
+            <div className="flex flex-col md:flex-row md:items-center gap-4 mb-10">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">👋</span>
+                <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
+                  Hello! I'm <span className="text-zinc-950">Shashi</span>
+                </h2>
+              </div>
+              
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-100 rounded-full self-start md:self-auto mt-2 md:mt-0">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                </span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-green-700">Open to Work</span>
+              </div>
             </div>
 
             <div className="flex items-center gap-3 mb-10">
