@@ -7,21 +7,24 @@ const caseStudies = [
     category: "FULL STACK",
     description: "Built a fully functional e-commerce platform using Next.js 14, integrating Stripe for payments, Tailwind CSS for styling, and Firebase for real-time order tracking and auth.",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
-    linkText: "See Details"
+    linkText: "View on GitHub",
+    url: "https://github.com/shashi00013"
   },
   {
     title: "AI-Powered Customer Support SaaS.",
     category: "AI & WEB",
     description: "Developed an intelligent chatbot dashboard leveraging the Gemini API and React. Real-time context-aware responses reduced support tickets by 40%.",
     image: "https://images.unsplash.com/photo-1551135049-8a33b5883817?q=80&w=2070&auto=format&fit=crop",
-    linkText: "See Details"
+    linkText: "View on GitHub",
+    url: "https://github.com/shashi00013"
   },
   {
     title: "Real-Time Collaborative Code Editor.",
     category: "WEB APP",
     description: "Engineered a collaborative code editor using WebSockets and React. Multiple users can edit the same file simultaneously with syntax highlighting and live preview.",
     image: "/src/assets/images/new_original_shashi_photo_1779121742145.png",
-    linkText: "See Details"
+    linkText: "View on GitHub",
+    url: "https://github.com/shashi00013"
   }
 ];
 
@@ -81,10 +84,10 @@ export function Projects() {
                 </p>
                 
                 <div className="flex flex-col items-start gap-1">
-                   <button className="flex items-center gap-2 font-bold group">
+                   <a href={study.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 font-bold group cursor-pointer text-black hover:text-indigo-600 transition-colors">
                       {study.linkText}
-                      <ArrowRight size={20} className="-rotate-45 group-hover:rotate-0 group-hover:translate-x-1 transition-all" />
-                   </button>
+                      <ExternalLink size={18} className="group-hover:scale-110 transition-transform" />
+                   </a>
                    <div className="w-24 h-px bg-zinc-300 group-hover:w-full transition-all duration-500" />
                 </div>
               </motion.div>

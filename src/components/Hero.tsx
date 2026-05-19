@@ -164,9 +164,9 @@ export default function Hero() {
 
               <ul className="space-y-4">
                 {[
-                  "Product must be authentic",
-                  "Solve pain points elegantly",
-                  "User testing, feedback, and validation"
+                  "Next.js & React Ecosystem Mastery",
+                  "AI Integration via Gemini & OpenAI",
+                  "Scalable Cloud Architecture (Firebase)"
                 ].map((item, i) => (
                   <motion.li
                     key={i}

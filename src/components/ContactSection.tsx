@@ -67,7 +67,7 @@ export function Contact() {
   const [formData, setFormData] = useState({ name: "", email: "", company: "" });
 
   const interests = [
-    "Mobile App", "Website Design", "Branding", "Webflow development", "App design", "Graphic design", "Wordpress"
+    "Full Stack App", "AI Integration", "Next.js Development", "Backend Architecture", "UI/UX Design", "Consulting"
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
