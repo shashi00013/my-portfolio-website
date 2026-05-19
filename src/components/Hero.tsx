@@ -3,90 +3,141 @@ import { ArrowRight, Download, Mail, Github, Linkedin, Sparkles } from "lucide-r
 import { useRef, useState, useMemo, useEffect } from "react";
 import profileImg from "../assets/images/shashi_profile.jpg";
 
-function SequentialTypewriter() {
-  const lines = useMemo(() => [
-    { text: "CRAFTING", className: "" },
-    { text: "DIGITAL", className: "text-brand-blue" },
-    { text: "EXPERIENCES", className: "" }
-  ], []);
+import { useMotionValue, useSpring } from "motion/react";
 
-  const [displayedTexts, setDisplayedTexts] = useState<string[]>(["", "", ""]);
-  const [phase, setPhase] = useState<'typing' | 'waiting' | 'deleting'>('typing');
-  const [activeLine, setActiveLine] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
+function ParticleBackground() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    let timer: any;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    const tick = () => {
-      if (phase === 'typing') {
-        if (charIndex < lines[activeLine].text.length) {
-          setDisplayedTexts(prev => {
-            const next = [...prev];
-            next[activeLine] = lines[activeLine].text.slice(0, charIndex + 1);
-            return next;
-          });
-          setCharIndex(prev => prev + 1);
-        } else {
-          if (activeLine < lines.length - 1) {
-            setActiveLine(prev => prev + 1);
-            setCharIndex(0);
-          } else {
-            setPhase('waiting');
-          }
-        }
-      } else if (phase === 'deleting') {
-        if (charIndex > 0) {
-          setDisplayedTexts(prev => {
-            const next = [...prev];
-            next[activeLine] = lines[activeLine].text.slice(0, charIndex - 1);
-            return next;
-          });
-          setCharIndex(prev => prev - 1);
-        } else {
-          if (activeLine > 0) {
-            setActiveLine(prev => prev - 1);
-            setCharIndex(lines[activeLine - 1].text.length);
-          } else {
-            setPhase('typing');
-            setActiveLine(0);
-            setCharIndex(0);
-          }
-        }
+    let particles: {x: number, y: number, vx: number, vy: number, size: number}[] = [];
+    let animationFrameId: number;
+    let mouse = { x: 0, y: 0 };
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      particles = [];
+      for (let i = 0; i < 50; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          size: Math.random() * 2 + 1
+        });
       }
     };
 
-    if (phase === 'waiting') {
-      timer = setTimeout(() => {
-        setPhase('deleting');
-        setActiveLine(lines.length - 1);
-        setCharIndex(lines[lines.length - 1].text.length);
-      }, 3000);
-    } else {
-      timer = setTimeout(tick, phase === 'typing' ? 60 : 30);
-    }
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    resize();
 
-    return () => clearTimeout(timer);
-  }, [phase, activeLine, charIndex, lines]);
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        // Mouse interaction
+        const dx = mouse.x - p.x;
+        const dy = mouse.y - p.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < 100) {
+          p.x -= dx * 0.01;
+          p.y -= dy * 0.01;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      animationFrameId = requestAnimationFrame(draw);
+    };
+    draw();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0 opacity-50" />;
+}
+
+const CHARS = "!<>-_\\/[]{}—=+*^?#________";
+function ScrambleText({ text }: { text: string }) {
+  const [displayText, setDisplayText] = useState(text);
+
+  useEffect(() => {
+    let iteration = 0;
+    let interval: any = null;
+
+    interval = setInterval(() => {
+      setDisplayText(text.split("").map((letter, index) => {
+        if(index < iteration) {
+          return text[index];
+        }
+        return CHARS[Math.floor(Math.random() * CHARS.length)];
+      }).join(""));
+
+      if(iteration >= text.length){ 
+        clearInterval(interval);
+      }
+      iteration += 1 / 3;
+    }, 30);
+
+    return () => clearInterval(interval);
+  }, [text]);
+
+  return <span>{displayText}</span>;
+}
+
+function MagneticWrapper({ children, className }: { children: React.ReactNode, className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const springX = useSpring(x, { stiffness: 150, damping: 15, mass: 0.1 });
+  const springY = useSpring(y, { stiffness: 150, damping: 15, mass: 0.1 });
+
+  const handleMouse = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { clientX, clientY } = e;
+    const { height, width, left, top } = ref.current!.getBoundingClientRect();
+    const middleX = clientX - (left + width / 2);
+    const middleY = clientY - (top + height / 2);
+    x.set(middleX * 0.2);
+    y.set(middleY * 0.2);
+  };
+
+  const reset = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   return (
-    <div className="space-y-1">
-      {lines.map((line, i) => (
-        <span
-          key={i}
-          className={`block relative font-black text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[0.9] ${line.className}`}
-        >
-          {displayedTexts[i]}
-          {((activeLine === i && phase !== 'waiting') || (phase === 'waiting' && i === lines.length - 1)) && (
-            <motion.span
-              animate={{ opacity: [1, 0] }}
-              transition={{ duration: 0.5, repeat: Infinity }}
-              className="inline-block w-1 h-12 md:h-20 bg-black ml-2 mb-[-4px]"
-            />
-          )}
-        </span>
-      ))}
-    </div>
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouse}
+      onMouseLeave={reset}
+      style={{ x: springX, y: springY }}
+      className={className}
+    >
+      {children}
+    </motion.div>
   );
 }
 
@@ -97,6 +148,7 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-[90vh] flex flex-col bg-surface-base overflow-hidden pt-6">
+      <ParticleBackground />
       {/* Header Navigation */}
       <nav className="w-full px-6 lg:px-8 flex items-center justify-between py-4 md:py-8 z-50">
         <motion.div
@@ -162,7 +214,7 @@ export default function Hero() {
             <div className="flex items-center gap-3 mb-10">
               <div className="w-10 h-px bg-zinc-300" />
               <span className="text-xl md:text-2xl font-bold text-zinc-900 flex items-center gap-2">
-                Full Stack Developer
+                <ScrambleText text="Full Stack Developer" />
                 <Sparkles size={20} className="text-zinc-400" />
               </span>
             </div>
@@ -195,16 +247,18 @@ export default function Hero() {
             </div>
 
             <div className="flex flex-wrap gap-6 items-center">
-              <motion.a
-                href="https://calendly.com"
-                target="_blank"
-                rel="noreferrer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-black text-white px-10 py-5 rounded-full font-bold text-sm tracking-tight shadow-xl shadow-black/20 inline-block"
-              >
-                Let's Talk
-              </motion.a>
+              <MagneticWrapper>
+                <motion.a
+                  href="https://calendly.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-black text-white px-10 py-5 rounded-full font-bold text-sm tracking-tight shadow-xl shadow-black/20 inline-block"
+                >
+                  Let's Talk
+                </motion.a>
+              </MagneticWrapper>
 
               <motion.a
                 href="/resume.pdf"
