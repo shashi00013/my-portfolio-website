@@ -1,6 +1,49 @@
-import { motion } from "motion/react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { useState, useEffect } from "react";
+
+function TiltCard({ children, className }: { children: React.ReactNode, className?: string }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 15 });
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 15 });
+  
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+  
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    
+    x.set(xPct);
+    y.set(yPct);
+  };
+  
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+  
+  return (
+    <motion.div
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={className}
+    >
+      <div style={{ transform: "translateZ(30px)" }} className="w-full h-full">
+        {children}
+      </div>
+    </motion.div>
+  );
+}
 
 const caseStudies = [
   {
@@ -34,7 +77,7 @@ const caseStudies = [
 
 export function Projects() {
   return (
-    <section id="projects" className="py-32 bg-surface-base">
+    <section id="projects" className="py-32 bg-surface-base" style={{ perspective: "1000px" }}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col items-center text-center mb-24">
           <div className="w-10 h-10 rotate-45 border border-zinc-200 flex items-center justify-center mb-6">
@@ -54,27 +97,38 @@ export function Projects() {
               <motion.div 
                 initial={{ opacity: 0, x: i % 2 === 1 ? 50 : -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.1 * i }}
                 className="w-full lg:w-3/5"
               >
-                <div className="relative aspect-[16/10] bg-zinc-100 rounded-[2rem] overflow-hidden group">
-                  <img 
-                    src={study.image} 
-                    alt={study.title}
-                    className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                  />
-                  <div className="absolute top-8 left-8">
-                     <div className="bg-black text-white px-4 py-2 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-xl">
-                       {study.category}
-                     </div>
+                <TiltCard className="w-full h-full relative cursor-crosshair">
+                  <div className="relative aspect-[16/10] bg-zinc-100 rounded-[2rem] overflow-hidden group shadow-2xl">
+                    <img 
+                      src={study.image} 
+                      alt={study.title}
+                      className="absolute inset-0 w-full h-full object-cover grayscale-[0.8] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[1s] ease-out"
+                    />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+                    <div className="absolute top-8 left-8">
+                       <div className="bg-black text-white px-4 py-2 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-xl">
+                         {study.category}
+                       </div>
+                    </div>
+                    {/* Hover Reveal Content */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-black/40 backdrop-blur-sm">
+                      <span className="text-white font-bold tracking-widest uppercase border border-white/50 px-6 py-3 rounded-full backdrop-blur-md">
+                        Explore Project
+                      </span>
+                    </div>
                   </div>
-                </div>
+                </TiltCard>
               </motion.div>
 
               <motion.div 
                 initial={{ opacity: 0, x: i % 2 === 1 ? -50 : 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.2 + (0.1 * i) }}
                 className="w-full lg:w-2/5"
               >
                 <span className="text-[10px] bg-black text-white px-4 py-2 rounded-full font-bold tracking-widest uppercase mb-8 inline-block lg:hidden">
